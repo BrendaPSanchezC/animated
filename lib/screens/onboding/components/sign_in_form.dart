@@ -1,3 +1,5 @@
+import 'package:animated/screens/onboding/entry_point.dart';
+import 'package:animated/screens/utils/rive_utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -25,12 +27,7 @@ class _SignInFormState extends State<SignInForm> {
 
   late SMITrigger coffeti;
 
-  StateMachineController getRiveController(Artboard artboard) {
-    StateMachineController? controller =
-      StateMachineController.fromArtboard(artboard, "State Machine 1");
-      artboard.addController(controller!);
-      return controller;
-  }
+
 
                  void sigIn(BuildContext context) {
                     setState(() {
@@ -51,6 +48,16 @@ class _SignInFormState extends State<SignInForm> {
                             isShowingLoading = false;
                           });
                           coffeti.fire();
+
+                          Future.delayed(Duration(seconds: 1),
+                          //despues de la animación nos mande a la otra ventana de entrypoint
+                          () {
+                            Navigator.push(context, 
+                            MaterialPageRoute(builder: 
+                            (context) => EntryPoint(),
+                            ));
+                          }
+                          );
                         },
                       );
                     } else{
@@ -163,7 +170,7 @@ class _SignInFormState extends State<SignInForm> {
          ?  CustomPositioned(child: RiveAnimation.asset("assets/RiveAssets/check.riv",
                 //aqui se van a dividir, para que cada uno tenga su función 
                 onInit: (artboard){
-                  StateMachineController controller = getRiveController(artboard);
+                  StateMachineController controller = RiveUtils.getRiveController(artboard);
                   check = controller.findSMI("Check") as SMITrigger;
                   error = controller.findSMI("Error") as SMITrigger;
                   reset = controller.findSMI("Reset") as SMITrigger;
@@ -177,7 +184,7 @@ class _SignInFormState extends State<SignInForm> {
             scale: 7,//se vea mas grande la animación 
             child: RiveAnimation.asset("assets/RiveAssets/confetti.riv",
             onInit: (artboard) {
-              StateMachineController controller = getRiveController(artboard);
+              StateMachineController controller = RiveUtils.getRiveController(artboard);
             
               coffeti = controller.findSMI("Trigger explosion") as SMITrigger;
             },
